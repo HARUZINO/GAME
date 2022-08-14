@@ -39,6 +39,19 @@ def card_show_2(temp_num):
         return 'K'
     return 'A'
 
+def card_show_3(temp_num):
+
+    if temp_num // 13 == 0 or temp_num == 0:
+        print('BEST Card is : ♣', card_show_2(temp_num))
+    elif temp_num // 13 == 1:
+        print('BEST Card is : ♥', card_show_2(temp_num))
+    elif temp_num // 13 == 2:
+        print('BEST Card is : ◈', card_show_2(temp_num))
+    else:
+        print('BEST Card is : ♠', card_show_2(temp_num))
+
+    return None
+
 def card_change(temp_deck,temp_hand):
 
     for i in range(5):
@@ -60,10 +73,6 @@ def card_confirm(temp_hand):
     temp_hand.sort()
     temp_hand_remainder = sorted(list(map(lambda x: x % 13,temp_hand)))
     temp_hand_remainder_count = Counter(temp_hand_remainder)
-
-    # print('===',temp_hand)
-    # print('===',temp_hand_remainder)
-    # print('===',temp_hand_remainder_count)
 
     if temp_hand == [8,9,10,11,12] or temp_hand == [21,22,23,24,25] or temp_hand == [34,35,36,37,38] or temp_hand == [47,48,49,50,51]:
         return 'ROYAL STARIGHT FLUSH'
@@ -104,9 +113,81 @@ def card_confirm(temp_hand):
     return 'BEST CARD'
 
 def card_confirm_2(temp_result,temp_hand):
-    
 
-# 위에서부터 시작 / 문양 확인 및 점수 + 상대방은 모든걸 랜덤으로 결정
+    temp_hand.sort()
+    temp_hand_remainder = sorted(list(map(lambda x: x % 13, temp_hand)))
+    temp_hand_remainder_count = Counter(temp_hand_remainder)
+
+    print('===', temp_hand)
+    print('===',temp_hand_remainder)
+    print('===',temp_hand_remainder_count)
+
+    if temp_result == 'ROYAL STARIGHT FLUSH':
+        return 1024, temp_hand[4]
+
+    if temp_result == 'STARIGHT FLUSH':
+        return 512, temp_hand[4]
+
+    if temp_result == 'FOUR CARD':
+        temp_find_key = find_value_for_key(temp_hand_remainder_count, 4)
+        temp_find_best_key = find_value_best_of_key(temp_hand,temp_find_key)
+
+        return 256, temp_find_best_key
+
+    if temp_result == 'FULL HOUSE':
+        temp_find_key = find_value_for_key(temp_hand_remainder_count, 3)
+        temp_find_best_key = find_value_best_of_key(temp_hand,temp_find_key)
+
+        return 128, temp_find_best_key
+
+    if temp_result == 'MOUNTAIN':
+        return 64, temp_hand[4]
+
+    if temp_result == 'FLUSH':
+        return 32, temp_hand[4]
+
+    if temp_result == 'STRAIGHT':
+        return 16, temp_hand[4]
+
+    if temp_result == 'TRIPLE':
+        temp_find_key = find_value_for_key(temp_hand_remainder_count, 3)
+        temp_find_best_key = find_value_best_of_key(temp_hand,temp_find_key)
+
+        return 8, temp_find_best_key
+
+    if temp_result == 'ONE PAIR':
+        temp_find_key = find_value_for_key(temp_hand_remainder_count, 2)
+        temp_find_best_key = find_value_best_of_key(temp_hand,temp_find_key)
+
+        return 2, temp_find_best_key
+
+    return 1, temp_hand[4]
+
+def find_value_for_key(temp_dict, temp_value):
+    for i in temp_dict.keys():
+        if temp_dict[i] == temp_value:
+            return i
+    return None
+
+def find_value_best_of_key(temp_hand, temp_value):
+
+    temp_max = 0
+
+    for i in temp_hand:
+        if i == 0 and temp_value == 0:
+            pass
+
+        if i % temp_value == 0 and i > temp_max:
+            temp_max = i
+
+    return temp_max
+
+
+
+
+
+
+
 
 deck = list(range(52))
 hand = []
@@ -121,24 +202,25 @@ hand.sort()
 
 # 3. 체인지 할 카드를 선정
 
-print(hand)
-card_show(hand)
-deck, hand = card_change(deck,hand)
+# card_show(hand)
+# deck, hand = card_change(deck,hand)
 
 # 4. 카드 분석
 
 print('\n')
+
+
+hand = [6, 16, 29, 31, 51]
 card_show(hand)
 
 mid_result = card_confirm(hand)
+print(mid_result)
 
 # 5. 숫자 / 문양 분석
 
 score, final_result = card_confirm_2(mid_result, hand)
-
-
-
-
+print('score : ', score)
+card_show_3(final_result)
 
 # 하단 코드는 테스팅 코드
 #
