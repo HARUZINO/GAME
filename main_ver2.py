@@ -170,6 +170,8 @@ def find_value_for_key(temp_dict, temp_value):
     return None
 
 def find_value_best_of_key(temp_hand, temp_value):
+    
+    # 현재 여기에서 에러 발생
 
     temp_max = 0
 
